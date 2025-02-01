@@ -15,6 +15,7 @@ struct PostDetailView: View {
                         .font(.headline)
                     Spacer()
                 }
+                .padding(.top)
                 .padding(.horizontal)
                 
                 // Image

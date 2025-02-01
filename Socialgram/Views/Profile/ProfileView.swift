@@ -49,7 +49,7 @@ struct ProfileView: View {
                                 .padding(.horizontal)
                         }
                         
-                        HStack(spacing: 40) {
+                        HStack(spacing: 30) {
                             VStack {
                                 Text("\(userPosts.count)")
                                     .font(.subheadline)
@@ -75,6 +75,7 @@ struct ProfileView: View {
                             }
                         }
                         .padding(.vertical)
+                        .padding(.horizontal)
                     }
                     
                     // Posts Grid
@@ -103,7 +104,6 @@ struct ProfileView: View {
                 // Load saved posts when view appears
                 postViewModel.loadSavedPosts()
             }
-            .navigationTitle("Profile")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Menu {

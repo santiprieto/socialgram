@@ -124,9 +124,8 @@ struct PostCard: View {
             }
         }
         .background(Color(.systemBackground))
-        .cornerRadius(10)
-        .shadow(radius: 2)
-        .padding(.horizontal, 16)
+        .cornerRadius(0)
+        .shadow(radius: 0)
         .padding(.vertical, 8)
     }
 } 
