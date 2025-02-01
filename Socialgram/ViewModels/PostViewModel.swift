@@ -7,6 +7,64 @@ class PostViewModel: ObservableObject {
     @Published var notifications: [Notification] = []
     @Published var isLoading = false
     
+    private let userDefaults = UserDefaults.standard
+    private let postsKey = "saved_posts"
+    
+    init() {
+        loadSavedPosts()
+    }
+    
+    func loadSavedPosts() {
+        if let savedPostsData = userDefaults.data(forKey: postsKey),
+           let decodedPosts = try? JSONDecoder().decode([Post].self, from: savedPostsData) {
+            posts = decodedPosts.sorted { $0.timestamp > $1.timestamp }
+        }
+    }
+    
+    private func savePosts() {
+        if let encodedPosts = try? JSONEncoder().encode(posts) {
+            userDefaults.set(encodedPosts, forKey: postsKey)
+        }
+    }
+    
+    func createPost(username: String, imageData: Data, caption: String) {
+        let newPost = Post(
+            id: UUID().uuidString,
+            username: username,
+            userImageURL: "", // You might want to add user profile image
+            imageURL: "", // We'll store the actual image data
+            caption: caption,
+            likes: 0,
+            isLiked: false,
+            timestamp: Date(),
+            comments: []
+        )
+        
+        // Save image to local storage or cloud storage
+        saveImage(imageData, for: newPost.id)
+        
+        posts.insert(newPost, at: 0)
+        savePosts()
+    }
+    
+    private func saveImage(_ imageData: Data, for postId: String) {
+        // Save to local documents directory
+        if let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            let fileURL = documentsDirectory.appendingPathComponent("\(postId).jpg")
+            try? imageData.write(to: fileURL)
+        }
+    }
+    
+    func loadImage(for postId: String) -> UIImage? {
+        if let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            let fileURL = documentsDirectory.appendingPathComponent("\(postId).jpg")
+            if let imageData = try? Data(contentsOf: fileURL) {
+                return UIImage(data: imageData)
+            }
+        }
+        return nil
+    }
+    
     func fetchPosts() async {
         isLoading = true
         
@@ -62,9 +120,9 @@ class PostViewModel: ObservableObject {
     
     func likePost(post: Post) {
         if let index = posts.firstIndex(where: { $0.id == post.id }) {
-            posts[index].likes += 1
-            posts[index].isLiked = true
-            createNotification(username: post.username, type: .like, postId: post.id)
+            posts[index].isLiked.toggle()
+            posts[index].likes += posts[index].isLiked ? 1 : -1
+            savePosts()
         }
     }
     
@@ -77,7 +135,7 @@ class PostViewModel: ObservableObject {
                 timestamp: Date()
             )
             posts[index].comments.append(comment)
-            createNotification(username: username, type: .comment, postId: post.id)
+            savePosts()
         }
     }
     

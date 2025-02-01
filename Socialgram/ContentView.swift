@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var authViewModel = AuthViewModel()
+    @StateObject private var postViewModel = PostViewModel()
     
     var body: some View {
         Group {
@@ -18,6 +19,7 @@ struct ContentView: View {
             } else {
                 MainTabView()
                     .environmentObject(authViewModel)
+                    .environmentObject(postViewModel)
             }
         }
     }

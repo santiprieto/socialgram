@@ -1,6 +1,6 @@
 import Foundation
 
-struct Post: Identifiable {
+struct Post: Identifiable, Codable {
     let id: String
     let username: String
     let userImageURL: String
@@ -12,14 +12,14 @@ struct Post: Identifiable {
     var comments: [Comment]
 }
 
-struct Comment: Identifiable {
+struct Comment: Identifiable, Codable {
     let id: String
     let username: String
     let text: String
     let timestamp: Date
 }
 
-struct Notification: Identifiable {
+struct Notification: Identifiable, Codable {
     let id: String
     let username: String
     let type: NotificationType
@@ -27,7 +27,7 @@ struct Notification: Identifiable {
     let timestamp: Date
 }
 
-enum NotificationType {
+enum NotificationType: Codable {
     case like
     case comment
 } 

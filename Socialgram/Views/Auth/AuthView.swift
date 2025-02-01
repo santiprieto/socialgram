@@ -5,6 +5,7 @@ struct AuthView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var showCreateAccount = false
+    @State private var isLoading = false
     
     var body: some View {
         NavigationView {
@@ -17,16 +18,26 @@ struct AuthView: View {
                 CustomTextField2("Password", text: $password, isSecure: true, icon: "lock")
                 
                 Button(action: {
-                    authViewModel.login(email: email, password: password)
+                    Task {
+                        isLoading = true
+                        await authViewModel.login(email: email, password: password)
+                        isLoading = false
+                    }
                 }) {
-                    Text("Sign In")
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue)
-                        .cornerRadius(10)
-                        .padding(.horizontal)
+                    if isLoading {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                    } else {
+                        Text("Sign In")
+                    }
                 }
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color.blue)
+                .cornerRadius(10)
+                .padding(.horizontal)
+                .disabled(isLoading)
                 
                 Button("Create Account") {
                     showCreateAccount = true
