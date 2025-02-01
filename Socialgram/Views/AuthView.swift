@@ -1,101 +1,53 @@
 import SwiftUI
 
 struct AuthView: View {
-    @EnvironmentObject private var authViewModel: AuthViewModel
-    @State private var isLogin = true
-    @FocusState private var focusedField: Field?
-    
-    enum Field {
-        case email, password
-    }
+    @EnvironmentObject var authViewModel: AuthViewModel
+    @State private var email = ""
+    @State private var password = ""
+    @State private var showCreateAccount = false
     
     var body: some View {
         NavigationView {
-            ZStack {
-                // Background gradient
-                LinearGradient(
-                    gradient: Gradient(colors: [Color.purple.opacity(0.3), Color.blue.opacity(0.3)]),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                .ignoresSafeArea()
+            VStack(spacing: 20) {
+                Text("Welcome")
+                    .font(.largeTitle)
+                    .bold()
                 
-                ScrollView {
-                    VStack(spacing: 25) {
-                        // Logo
-                        VStack(spacing: 10) {
-                            Image(systemName: "camera.fill")
-                                .font(.system(size: 60))
-                                .foregroundColor(.blue)
-                            
-                            Text("Socialgram")
-                                .font(.largeTitle)
-                                .fontWeight(.bold)
-                        }
-                        .padding(.top, 60)
-                        
-                        // Form fields
-                        VStack(spacing: 20) {
-                            CustomTextField(
-                                text: $authViewModel.email,
-                                placeholder: "Email",
-                                systemImage: "envelope",
-                                isSecure: false
-                            )
-                            .focused($focusedField, equals: .email)
-                            .textInputAutocapitalization(.never)
-                            .autocorrectionDisabled()
-                            
-                            CustomTextField(
-                                text: $authViewModel.password,
-                                placeholder: "Password",
-                                systemImage: "lock",
-                                isSecure: true
-                            )
-                            .focused($focusedField, equals: .password)
-                            
-                            // Login button
-                            Button(action: {
-                                authViewModel.login()
-                            }) {
-                                ZStack {
-                                    Text(isLogin ? "Log In" : "Sign Up")
-                                        .fontWeight(.semibold)
-                                        .foregroundColor(.white)
-                                        .frame(maxWidth: .infinity)
-                                        .padding()
-                                        .background(
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .fill(Color.blue)
-                                        )
-                                        .opacity(authViewModel.isLoading ? 0 : 1)
-                                    
-                                    if authViewModel.isLoading {
-                                        ProgressView()
-                                            .tint(.white)
-                                    }
-                                }
-                            }
-                            .disabled(authViewModel.isLoading)
-                        }
+                CustomTextField2("Email", text: $email, icon: "envelope")
+                CustomTextField2("Password", text: $password, isSecure: true, icon: "lock")
+                
+                Button(action: {
+                    authViewModel.login(email: email, password: password)
+                }) {
+                    Text("Sign In")
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue)
+                        .cornerRadius(10)
                         .padding(.horizontal)
-                        
-                        // Toggle between login and signup
-                        Button(action: { isLogin.toggle() }) {
-                            Text(isLogin ? "Don't have an account? Sign Up" : "Already have an account? Log In")
-                                .foregroundColor(.blue)
-                        }
-                    }
-                    .padding()
+                }
+                
+                Button("Create Account") {
+                    showCreateAccount = true
+                }
+                .sheet(isPresented: $showCreateAccount) {
+                    CreateUserView()
                 }
             }
-            .alert("Error", isPresented: $authViewModel.showError) {
-                Button("OK", role: .cancel) {}
+            .padding()
+            .alert("Error", isPresented: $authViewModel.showAlert) {
+                Button("OK", role: .cancel) { }
             } message: {
-                Text(authViewModel.errorMessage ?? "An error occurred")
+                Text(authViewModel.alertMessage)
             }
         }
     }
+}
+
+#Preview {
+    AuthView()
+        .environmentObject(AuthViewModel())
 }
 
 struct CustomTextField: View {
