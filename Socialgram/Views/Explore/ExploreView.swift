@@ -30,10 +30,11 @@ struct ExploreView: View {
                         }
                     }
                 }
-                .padding(10)
+                .padding(16)
                 .background(Color(.systemGray6))
                 .cornerRadius(10)
-                .padding(.horizontal)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
                 
                 if searchText.isEmpty {
                     // Show recent posts when not searching
@@ -57,6 +58,7 @@ struct ExploreView: View {
                             }
                         }
                     }
+                    .padding(.top, 8)
                 } else {
                     // Show search results
                     List(authViewModel.searchResults) { user in

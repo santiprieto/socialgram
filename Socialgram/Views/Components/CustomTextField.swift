@@ -14,7 +14,7 @@ struct CustomTextField2: View {
     }
     
     var body: some View {
-        HStack {
+        HStack(spacing: 12) {
             Image(systemName: icon)
                 .foregroundColor(.gray)
             
@@ -24,9 +24,9 @@ struct CustomTextField2: View {
                 TextField(placeholder, text: text)
             }
         }
-        .padding()
+        .padding(16)
         .background(Color(.systemGray6))
         .cornerRadius(10)
-        .padding(.horizontal)
+        .padding(.horizontal, 16)
     }
 } 

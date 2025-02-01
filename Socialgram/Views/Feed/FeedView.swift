@@ -7,12 +7,12 @@ struct FeedView: View {
     var body: some View {
         NavigationView {
             ScrollView {
-                LazyVStack(spacing: 16) {
+                LazyVStack(spacing: 24) {
                     ForEach(postViewModel.posts) { post in
                         PostCard(post: post)
                     }
                 }
-                .padding(.vertical)
+                .padding(.vertical, 24)
             }
             .navigationTitle("Feed")
             .refreshable {
@@ -29,21 +29,22 @@ struct CommentsView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
+            VStack(spacing: 0) {
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 16) {
                         ForEach(post.comments) { comment in
                             CommentRow(comment: comment)
                         }
                     }
-                    .padding()
+                    .padding(16)
                 }
                 
                 Divider()
                 
-                HStack {
+                HStack(spacing: 12) {
                     TextField("Add a comment...", text: $commentText)
                         .textFieldStyle(.roundedBorder)
+                        .padding(.vertical, 8)
                     
                     Button("Post") {
                         // Handle posting comment
@@ -51,7 +52,7 @@ struct CommentsView: View {
                     }
                     .disabled(commentText.isEmpty)
                 }
-                .padding()
+                .padding(16)
             }
             .navigationTitle("Comments")
             .navigationBarTitleDisplayMode(.inline)

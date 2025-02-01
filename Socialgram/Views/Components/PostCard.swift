@@ -9,7 +9,7 @@ struct PostCard: View {
     @State private var commentText = ""
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 12) {
             // Header
             HStack {
                 Text(post.username)
@@ -19,7 +19,7 @@ struct PostCard: View {
                     .font(.caption)
                     .foregroundColor(.gray)
             }
-            .padding(.horizontal)
+            .padding(.horizontal, 16)
             
             // Image
             if let image = postViewModel.loadImage(for: post.id) {
@@ -48,7 +48,7 @@ struct PostCard: View {
                 
                 Spacer()
             }
-            .padding(.horizontal)
+            .padding(.horizontal, 16)
             .font(.system(size: 20))
             
             // Likes
@@ -56,7 +56,7 @@ struct PostCard: View {
                 Text("\(post.likes) likes")
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                    .padding(.horizontal)
+                    .padding(.horizontal, 16)
             }
             
             // Caption
@@ -66,11 +66,11 @@ struct PostCard: View {
                 Text(" ") +
                 Text(post.caption)
             }
-            .padding(.horizontal)
+            .padding(.horizontal, 16)
             
             // Comments Preview
             if !post.comments.isEmpty {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 8) {
                     if post.comments.count > 2 && !showComments {
                         Button(action: {
                             showComments = true
@@ -93,7 +93,7 @@ struct PostCard: View {
                         .font(.subheadline)
                     }
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, 16)
             }
             
             // Add comment
@@ -119,12 +119,14 @@ struct PostCard: View {
                     }
                     .disabled(commentText.isEmpty)
                 }
-                .padding()
+                .padding(16)
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
         .background(Color(.systemBackground))
         .cornerRadius(10)
         .shadow(radius: 2)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
     }
 } 

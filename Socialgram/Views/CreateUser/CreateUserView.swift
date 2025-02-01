@@ -11,11 +11,11 @@ struct CreateUserView: View {
     @State private var isLoading = false
     
     var body: some View {
-        VStack {
+        VStack(spacing: 16) {
             Text("Create Account")
                 .font(.largeTitle)
                 .bold()
-                .padding(.vertical, 20)
+                .padding(.vertical, 24)
             
             CustomTextField2("Full Name", text: $fullName, icon: "person")
             CustomTextField2("Username", text: $username, icon: "person.circle")
@@ -43,16 +43,17 @@ struct CreateUserView: View {
             }
             .foregroundColor(.white)
             .frame(maxWidth: .infinity)
-            .padding()
+            .padding(16)
             .background(Color.blue)
             .cornerRadius(10)
-            .padding(.horizontal)
+            .padding(.horizontal, 16)
             .disabled(isLoading)
             
             Button("Already have an account? Sign In") {
                 dismiss()
             }
-            .padding()
+            .padding(.top, 8)
         }
+        .padding(.vertical, 16)
     }
 } 

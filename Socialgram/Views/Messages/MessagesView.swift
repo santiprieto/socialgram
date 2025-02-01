@@ -153,6 +153,7 @@ struct ChatView: View {
     
     var body: some View {
         VStack {
+            // Chat messages
             ScrollViewReader { proxy in
                 ScrollView {
                     LazyVStack(spacing: 12) {
@@ -160,7 +161,7 @@ struct ChatView: View {
                             MessageBubble(message: message, isCurrentUser: message.senderId == authViewModel.currentUser?.id)
                         }
                     }
-                    .padding()
+                    .padding(16)
                 }
                 .onChange(of: chatMessages.count) { _ in
                     withAnimation {
@@ -169,9 +170,11 @@ struct ChatView: View {
                 }
             }
             
-            HStack {
+            // Message input
+            HStack(spacing: 12) {
                 TextField("Message...", text: $messageText)
                     .textFieldStyle(.roundedBorder)
+                    .padding(.vertical, 8)
                 
                 Button(action: {
                     guard let currentUserId = authViewModel.currentUser?.id else { return }
@@ -187,7 +190,7 @@ struct ChatView: View {
                 }
                 .disabled(messageText.isEmpty)
             }
-            .padding()
+            .padding(16)
         }
         .navigationTitle(otherUser.username)
         .navigationBarTitleDisplayMode(.inline)
